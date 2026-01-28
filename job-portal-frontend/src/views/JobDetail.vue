@@ -1,93 +1,137 @@
 <template>
-  <div class="bg-[#F4F7F9] min-h-screen pb-20">
-    <div class="bg-white border-b mb-6">
-      <div class="max-w-[1140px] mx-auto px-4 py-3 text-[13px] text-gray-500">
-        <router-link to="/" class="hover:text-blue-600">Home</router-link> 
-        <span class="mx-2">/</span> 
-        <span class="text-gray-400">Job Details</span>
+  <div class="bg-[#F4F7F9] min-h-screen pb-12 font-sans">
+    <div class="bg-white border-b sticky top-0 z-20">
+      <div class="max-w-5xl mx-auto px-4 py-3 text-sm">
+        <router-link to="/" class="text-blue-600 hover:underline flex items-center gap-1">
+          <span>←</span> Back to Job List
+        </router-link>
       </div>
     </div>
 
-    <div v-if="loading" class="text-center py-20">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700 mx-auto"></div>
+    <div v-if="loading" class="flex justify-center items-center py-20">
+      <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-600"></div>
     </div>
 
-    <div v-else-if="job" class="max-w-[1140px] mx-auto px-4 grid grid-cols-12 gap-6">
+    <div v-else-if="job" class="max-w-5xl mx-auto px-4 mt-6 grid grid-cols-12 gap-6">
       
       <div class="col-span-12 lg:col-span-8 space-y-6">
         
-        <div class="bg-white border border-[#DDD] p-8 rounded-sm shadow-sm">
-          <h1 class="text-2xl font-bold text-blue-700 leading-tight">{{ job.title }}</h1>
-          <h2 class="text-xl font-bold text-gray-800 mt-2">{{ job.company }}</h2>
-          <div class="mt-4 flex flex-wrap gap-4 text-sm text-gray-600">
-            <span class="flex items-center">📍 {{ job.location }}</span>
-            <span class="flex items-center font-bold text-red-600">📅 Deadline: {{ job.deadline }}</span>
+        <div class="bg-white border rounded shadow-sm p-6">
+          <div class="flex flex-col md:flex-row justify-between gap-4">
+            <div class="flex-1">
+              <h1 class="text-2xl font-bold text-gray-900">{{ job.title }}</h1>
+              <p class="text-xl text-blue-700 font-semibold mt-1">{{ job.company }}</p>
+              <div class="mt-4 flex flex-wrap gap-4 text-sm text-gray-500">
+                <span class="flex items-center gap-1">📍 {{ job.location }}</span>
+                <span class="flex items-center gap-1">💼 {{ job.employment_status }}</span>
+                <span class="flex items-center gap-1 text-red-600 font-bold">⏰ Deadline: {{ job.deadline }}</span>
+              </div>
+            </div>
+            <div class="w-24 h-24 border rounded flex items-center justify-center p-2 self-start bg-white">
+              <img :src="job.logo" class="max-w-full max-h-full object-contain" alt="Company Logo" />
+            </div>
+          </div>
+          
+          <div class="mt-6 flex gap-3">
+            <button class="bg-green-600 hover:bg-green-700 text-white px-8 py-2.5 rounded font-bold shadow-md transition">
+              Apply Online
+            </button>
+            <button class="border border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-2.5 rounded font-bold transition">
+              Shortlist
+            </button>
           </div>
         </div>
 
-        <div class="bg-white border border-[#DDD] p-8 rounded-sm shadow-sm">
-          <h3 class="font-bold text-lg text-gray-800 border-b pb-3 mb-5 uppercase tracking-wide">Job Summary</h3>
+        <div class="bg-white border rounded shadow-sm p-6 md:p-8 space-y-8">
           
-          <div class="space-y-6">
-            <div>
-              <h4 class="font-bold text-[#0072BC] mb-2 flex items-center">
-                <span class="mr-2 italic font-serif">i</span> Educational Requirements
-              </h4>
-              <p class="font-bold text-gray-800 text-[15px]">{{ job.education_title }}</p>
-              <p class="text-gray-600 mt-1 text-[14px] leading-relaxed">{{ job.education_detail }}</p>
-            </div>
+          <section>
+            <h3 class="text-lg font-bold text-gray-800 border-b-2 border-blue-600 inline-block mb-4">Job Context</h3>
+            <p class="text-gray-700 leading-relaxed">{{ job.context }}</p>
+          </section>
 
-            <div>
-              <h4 class="font-bold text-[#0072BC] mb-2">Experience Requirements</h4>
-              <ul class="list-disc ml-5 text-[14px] text-gray-600">
-                <li>{{ job.experience }}</li>
-                <li>Professional knowledge in the relevant industry is preferred.</li>
-              </ul>
-            </div>
+          <section>
+            <h3 class="text-lg font-bold text-gray-800 border-b-2 border-blue-600 inline-block mb-4">Responsibilities</h3>
+            <ul class="list-disc pl-5 space-y-2 text-gray-700">
+              <li v-for="(item, index) in job.responsibilities" :key="index">{{ item }}</li>
+            </ul>
+          </section>
 
-            <div>
-              <h4 class="font-bold text-[#0072BC] mb-2">Additional Requirements</h4>
-              <p class="text-[14px] text-gray-600 leading-relaxed">
-                {{ job.description || 'Candidates must have good communication skills and a positive attitude towards team collaboration.' }}
-              </p>
+          <section>
+            <h3 class="text-lg font-bold text-gray-800 border-b-2 border-blue-600 inline-block mb-4">Educational Requirements</h3>
+            <ul class="list-disc pl-5 space-y-2 text-gray-700 font-semibold">
+              <li v-for="(edu, index) in job.education_requirements" :key="index">{{ edu }}</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3 class="text-lg font-bold text-gray-800 border-b-2 border-blue-600 inline-block mb-4">Additional Requirements</h3>
+            <ul class="list-disc pl-5 space-y-2 text-gray-700">
+              <li v-for="(req, index) in job.additional_requirements" :key="index">{{ req }}</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3 class="text-lg font-bold text-gray-800 border-b-2 border-blue-600 inline-block mb-4">Skills & Expertise</h3>
+            <div class="flex flex-wrap gap-2">
+              <span v-for="skill in job.skills" :key="skill" 
+                class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold border border-blue-100">
+                {{ skill }}
+              </span>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="col-span-12 lg:col-span-4 space-y-6">
+        <div class="bg-white border rounded shadow-sm p-5">
+          <h3 class="font-bold text-gray-800 mb-4 border-b pb-2">Job Summary</h3>
+          <div class="space-y-4 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-500">Published on:</span>
+              <span class="font-semibold">{{ job.published_date }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Vacancy:</span>
+              <span class="font-semibold">{{ job.vacancy }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Employment Status:</span>
+              <span class="font-semibold">{{ job.employment_status }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Experience:</span>
+              <span class="font-semibold">{{ job.experience }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Workplace:</span>
+              <span class="font-semibold">{{ job.workplace }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Salary:</span>
+              <span class="font-semibold text-blue-700">{{ job.salary }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-blue-900 text-white border rounded shadow-sm p-6">
+          <h3 class="font-bold mb-4 border-b border-blue-700 pb-2">Company Information</h3>
+          <div class="space-y-4 text-sm">
+            <p class="font-bold text-lg">{{ job.company }}</p>
+            <p><span class="text-blue-300">Address:</span><br/>{{ job.company_address }}</p>
+            <p v-if="job.company_website"><span class="text-blue-300">Web:</span><br/>
+              <a :href="job.company_website" target="_blank" class="underline hover:text-blue-200">Visit Website</a>
+            </p>
+            <div class="bg-blue-800 p-3 rounded text-xs leading-relaxed italic">
+              {{ job.company_business }}
             </div>
           </div>
         </div>
       </div>
 
-      <aside class="col-span-12 lg:col-span-4 space-y-6">
-        <div class="bg-[#FFF8E1] border border-[#FFD54F] p-6 rounded-sm text-center">
-          <p class="text-sm font-bold text-gray-700 mb-4">Are you the right person for this job?</p>
-          <button class="w-full bg-[#28A745] hover:bg-[#218838] text-white py-3 rounded font-black text-lg shadow-md transition transform hover:scale-105">
-            APPLY ONLINE
-          </button>
-          <p class="text-[11px] text-gray-500 mt-3 italic">Deadline: {{ job.deadline }}</p>
-        </div>
-
-        <div class="bg-white border border-[#DDD] p-6 rounded-sm shadow-sm">
-          <h3 class="font-bold text-gray-800 border-b pb-2 mb-4">Job Highlights</h3>
-          <div class="space-y-3 text-sm">
-            <div class="flex justify-between">
-              <span class="text-gray-500">Salary:</span>
-              <span class="font-bold">{{ job.salary }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Location:</span>
-              <span class="font-bold">{{ job.location }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Experience:</span>
-              <span class="font-bold">{{ job.experience }}</span>
-            </div>
-          </div>
-        </div>
-      </aside>
-
     </div>
 
-    <div v-else class="text-center py-20">
-      <h2 class="text-2xl text-red-600 font-bold">Job Not Found</h2>
-      <router-link to="/" class="text-blue-600 underline mt-4 inline-block">Back to Job List</router-link>
+    <div v-else class="text-center py-20 text-gray-500">
+      Job listing not found or server error.
     </div>
   </div>
 </template>
@@ -100,26 +144,17 @@ const route = useRoute();
 const job = ref(null);
 const loading = ref(true);
 
-const fetchJobDetail = async () => {
-  const jobId = route.params.id; // Gets the ID from the URL (e.g. /job/1)
+const fetchJobDetails = async () => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/jobs/${jobId}`);
-    if (response.ok) {
-      job.value = await response.json();
-    }
+    const res = await fetch(`http://127.0.0.1:8000/api/jobs/${route.params.id}`);
+    if (!res.ok) throw new Error("Failed to fetch");
+    job.value = await res.json();
   } catch (error) {
-    console.error("Error fetching job details:", error);
+    console.error("Error:", error);
   } finally {
     loading.value = false;
   }
 };
 
-onMounted(fetchJobDetail);
+onMounted(fetchJobDetails);
 </script>
-
-<style scoped>
-/* Specific fonts to match the data-heavy job circular look */
-h1, h2, h3 {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-</style>

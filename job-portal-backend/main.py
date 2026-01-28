@@ -1,113 +1,160 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 
-app = FastAPI(title="Bdjobs Clone API")
+app = FastAPI()
 
-# --- 1. CORS Configuration ---
-# This allows your Vue frontend (port 5173) to talk to this API (port 8000)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-    allow_credentials=True,
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# --- 2. Data Model ---
 class Job(BaseModel):
     id: int
-    title: str
     company: str
-    location: str
-    education: Optional[str] = "Na"
-    description: Optional[str] = None
-    experience: str
-    salary: str = "Na"
+    title: str
+    logo: str
     deadline: str
+    location: str
+    salary: str
+    experience: str
+    published_date: str
+    vacancy: str
+    employment_status: str
+    workplace: str
+    education_requirements: List[str]
+    additional_requirements: List[str]
+    context: str
+    responsibilities: List[str]
+    skills: List[str]
+    company_address: str
+    company_website: str
+    company_business: str
 
-# --- 3. Mock Database (Based on your text) ---
 jobs_db = [
     {
         "id": 1,
-        "title": "Head of Operations, Cozy Cub",
         "company": "Alam Textile & Garments",
-        "location": "Dhaka",
-        "education": "Bachelor/Honors",
-        "description": "Bachelor’s/Master’s degree in Business Administration, Fashion Merchandising, Textile Engineering, or relevant discipline.",
+        "title": "Head of Operations, Cozy Cub",
+        "logo": "https://corporate.bdjobs.com/logos/47268_2.png",
+        "deadline": "15 Feb 2026",
+        "location": "Dhaka (Shyampur)",
+        "salary": "Negotiable",
         "experience": "8 to 10 years",
-        "salary": "Na",
-        "deadline": "15 Feb 2026"
+        "published_date": "28 Jan 2026",
+        "vacancy": "01",
+        "employment_status": "Full Time",
+        "workplace": "Work at office",
+        "education_requirements": [
+            "Bachelor/Honors",
+            "Bachelor’s/Master’s degree in Business Administration, Fashion Merchandising, Textile Engineering, or relevant discipline."
+        ],
+        "additional_requirements": [
+            "Minimum 8–10 years of experience in fashion retail operations, baby & kids wear brands (mandatory).",
+            "Proven experience in managing end-to-end operations from design to store sales.",
+            "Strong leadership, planning, and decision-making skills.",
+            "Excellent communication and stakeholder management ability.",
+            "Sound knowledge of retail systems and supply chain processes."
+        ],
+        "context": "Cozy Cub, a growing retail clothing brand specializing in baby & kids wear, is seeking an experienced and dynamic Head of Operations to lead end-to-end operations from product design and development through retail sales and customer experience.",
+        "responsibilities": [
+            "Lead and oversee all operational functions including design, merchandising, and production.",
+            "Ensure smooth execution of product development from concept to store availability.",
+            "Drive sales performance and operational efficiency across all retail outlets.",
+            "Develop and implement operational strategies and SOPs.",
+            "Ensure effective inventory management and stock planning."
+        ],
+        "skills": ["Apparel merchandising", "CRM", "Fashion Design", "Operation Management", "Sales & Marketing"],
+        "company_address": "Plot No #23, Road No #10, Shyampur Industrial Area, Dhaka.",
+        "company_website": "https://alamgarments.com/",
+        "company_business": "Bangladesh’s leading manufacturer of baby wear, specializing in comfortable and affordable clothing for kids."
     },
     {
         "id": 2,
-        "title": "Senior Officer, Order Development",
-        "company": "Ayesha Abed Foundation",
-        "location": "Dhaka",
-        "education": "Bachelor’s Degree in any discipline (preferably BSc. in Textile)",
-        "description": "A Bachelor’s Degree in any discipline (preferably BSc. in Textile) from a reputed university",
-        "experience": "Na",
-        "salary": "Na",
-        "deadline": "07 Feb 2026"
+        "company": "TechVision Solutions Ltd.",
+        "title": "Senior Full Stack Developer (Node.js & Vue.js)",
+        "logo": "https://via.placeholder.com/150",
+        "deadline": "20 Feb 2026",
+        "location": "Dhaka (Gulshan)",
+        "salary": "80,000 - 1,20,000 (Monthly)",
+        "experience": "5 to 7 years",
+        "published_date": "27 Jan 2026",
+        "vacancy": "03",
+        "employment_status": "Full Time",
+        "workplace": "Hybrid",
+        "education_requirements": [
+            "B.Sc in Computer Science & Engineering (CSE) from any reputed university.",
+            "Certifications in AWS or Azure will be an added advantage."
+        ],
+        "additional_requirements": [
+            "Expertise in JavaScript (ES6+), Node.js, and Vue.js 3.",
+            "Deep understanding of RESTful API design and PostgreSQL.",
+            "Experience with Docker, Kubernetes, and CI/CD pipelines.",
+            "Ability to lead a team of 4-5 junior developers.",
+            "Strong problem-solving skills and algorithmic thinking."
+        ],
+        "context": "We are a fast-growing Fintech startup building the next generation of digital payment solutions in Bangladesh. We are looking for a tech-heavy leader to scale our infrastructure.",
+        "responsibilities": [
+            "Design and implement scalable backend services using Node.js.",
+            "Develop high-performance frontend components using Vue.js 3.",
+            "Optimize database queries and ensure data security protocols.",
+            "Collaborate with Product Managers to define feature specifications.",
+            "Perform code reviews and mentor junior engineering staff."
+        ],
+        "skills": ["Node.js", "Vue.js", "PostgreSQL", "Docker", "AWS", "TypeScript"],
+        "company_address": "Level 4, House 12, Road 90, Gulshan 2, Dhaka.",
+        "company_website": "https://techvision.io",
+        "company_business": "A software innovation hub focusing on Fintech and E-commerce automation."
     },
     {
         "id": 3,
-        "title": "Sr. Executive/Manager - Marketing",
-        "company": "DOM-INNO Developments Ltd.",
-        "location": "Dhaka",
-        "education": "BBA / MBA in Marketing",
-        "description": "Collaboration and Inclusivity. Employee Well-being. Competitive Compensation.",
-        "experience": "4 to 8 years",
-        "salary": "Na",
-        "deadline": "27 Feb 2026"
-    },
-    {
-        "id": 4,
-        "title": "Trainee Officer/ Officer - IT",
-        "company": "Kazi Farms Group",
-        "location": "Jamalpur",
-        "education": "Bachelor/Honors",
-        "description": "Information Technology management and support.",
-        "experience": "1 to 3 years",
-        "salary": "Na",
-        "deadline": "06 Feb 2026"
+        "company": "Global Pharma Group",
+        "title": "Manager, Human Resources",
+        "logo": "https://via.placeholder.com/150",
+        "deadline": "10 Feb 2026",
+        "location": "Gazipur",
+        "salary": "Negotiable",
+        "experience": "10 to 12 years",
+        "published_date": "25 Jan 2026",
+        "vacancy": "01",
+        "employment_status": "Full Time",
+        "workplace": "Work at office",
+        "education_requirements": [
+            "MBA in HRM from a top-tier university.",
+            "PGDHRM is highly preferred.",
+            "Bachelor degree in any discipline."
+        ],
+        "additional_requirements": [
+            "Extensive experience in Factory HR management and compliance.",
+            "Expertise in Bangladesh Labor Law 2006 (Amended 2013).",
+            "Proven track record in talent acquisition and performance appraisal.",
+            "Excellent negotiation and conflict resolution skills."
+        ],
+        "context": "As one of the leading pharmaceutical companies, we prioritize our people. We are looking for an HR veteran to manage our Gazipur manufacturing plant's workforce.",
+        "responsibilities": [
+            "Manage end-to-end recruitment for factory staff and corporate roles.",
+            "Ensure 100% compliance with national labor laws and safety standards.",
+            "Oversee payroll processing and employee benefit programs.",
+            "Conduct training needs analysis and coordinate development programs.",
+            "Handle employee grievances and disciplinary actions."
+        ],
+        "skills": ["HRIS", "Labor Law", "Performance Management", "Payroll Administration", "Compliance"],
+        "company_address": "Sreepur, Gazipur, Bangladesh.",
+        "company_website": "https://globalpharma.com.bd",
+        "company_business": "A leading pharmaceutical manufacturer exporting to over 20 countries."
     }
 ]
 
-# --- 4. API Endpoints ---
-
-@app.get("/")
-def read_root():
-    return {"status": "Online", "message": "Bdjobs Clone API is running"}
-    
-    
-@app.get("/api/jobs/{job_id}", response_model=Job)
-async def get_job_details(job_id: int):
-    # Find the job with the matching ID
-    job = next((item for item in jobs_db if item["id"] == job_id), None)
-    if job:
-        return job
-    return {"error": "Job not found"}
-    
-
 @app.get("/api/jobs", response_model=List[Job])
-async def get_jobs():
-    """Returns all jobs currently in the mock database."""
+def get_jobs():
     return jobs_db
 
-@app.get("/api/jobs/search")
-async def search_jobs(keyword: str = ""):
-    """Filter jobs by title or company name."""
-    if not keyword:
-        return jobs_db
-    
-    filtered = [
-        job for job in jobs_db 
-        if keyword.lower() in job["title"].lower() or keyword.lower() in job["company"].lower()
-    ]
-    return filtered
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+@app.get("/api/jobs/{job_id}", response_model=Job)
+def get_job(job_id: int):
+    job = next((j for j in jobs_db if j["id"] == job_id), None)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return job

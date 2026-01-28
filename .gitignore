@@ -1,0 +1,13 @@
+# Ignore Backend virtual environments and cache
+**/venv/
+**/__pycache__/
+**/*.pyc
+job-portal-backend/requirements.txt (don't ignore this, but ignore the rest of the junk)
+
+# Ignore Frontend dependencies and build files
+**/node_modules/
+**/dist/
+**/.DS_Store
+
+# Ignore environment secrets
+**/.env

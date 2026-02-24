@@ -6,7 +6,12 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', name: 'home', component: HomeView },
-    { path: '/job/:id', name: 'job-detail', component: JobDetail }
+    { path: '/job/:id', name: 'job-detail', component: JobDetail },
+    {
+  path: '/post-job',
+  name: 'post-job',
+  component: () => import('../views/PostJob.vue')
+}
   ]
 })
 

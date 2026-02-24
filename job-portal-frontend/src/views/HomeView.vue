@@ -94,7 +94,7 @@
               </router-link>
             </div>
           </div>
-          <div class="h-[3px] w-0 group-hover:w-full bg-[#0072BC] transition-all duration-500 absolute bottom-0 left-0"></div>
+          <div class="h-0.75 w-0 group-hover:w-full bg-[#0072BC] transition-all duration-500 absolute bottom-0 left-0"></div>
         </div>
 
         <div v-if="filteredJobs.length > 0" class="flex justify-center mt-8 space-x-2 pb-10">
